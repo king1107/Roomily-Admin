@@ -1,0 +1,103 @@
+  
+  .NotFound-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding-left: 175px;
+  }
+  
+  .NotFound-container > img {
+    padding-right: 175px;
+  }
+  
+  .NotFound-error {
+    width: 50%;
+    text-align: left;
+    margin-right: 2rem;
+  }
+  
+  .NotFound-error h1 {
+    font-size: 36px;
+    font-weight: 600;
+    color: #2d2b2b;
+    margin-top: 2rem;
+  }
+  
+  .NotFound-error p {
+    font-size: 20px;
+    font-family: "eurostile", sans-serif;
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+  
+  .NotFound-cta {
+    font-weight: 500;
+    margin-top: 2rem;
+  }
+  
+  .NotFound-cta-back {
+    padding: 12px 20px;
+    font-size: 18px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .NotFound-cta-back::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .NotFound-cta-back:hover::before {
+    transform: translateX(100%);
+  }
+  
+  .NotFound-cta-back:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .NotFound-cta-back:active {
+    transform: scale(0.9);
+    transition: transform 0.2s ease;
+  }
+  
+  .NotFound-hero-img {
+    height: 70vh;
+    animation: NotFound-MoveUpDown 2s ease-in-out infinite alternate-reverse both;
+  }
+  
+  @keyframes NotFound-MoveUpDown {
+    0% {
+      transform: translateY(10px);
+    }
+    100% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .NotFound-container {
+      flex-direction: column;
+    }
+  
+    .NotFound-error {
+      width: 80%;
+      margin-right: 0;
+      margin-bottom: 2rem;
+      text-align: justify;
+    }
+  }
