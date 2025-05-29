@@ -274,18 +274,6 @@ const AdminDashboard = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
-                <div className="flex items-center">
-                  <div className="p-3 rounded-full bg-blue-100 mr-4">
-                    <FaHouseUser className="text-blue-500 text-xl" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 font-medium">Phòng đang hoạt động</p>
-                    <p className="text-2xl font-bold text-gray-800">{systemStats.totalActiveRentedRooms || 0}</p>
-                  </div>
-                </div>
-              </div>
             </>
           )}
 
@@ -312,14 +300,43 @@ const AdminDashboard = () => {
         {systemStats && dashboardData && (
           <div className="bg-white p-6 rounded-xl shadow-md">
             <h2 className="text-xl font-bold mb-4 text-gray-800">Giao dịch tháng này</h2>
-            <div className="h-60">
-              <ResponsiveContainer width="100%" height="150%">
-                <BarChart data={getTransactionChartData()}>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={getTransactionChartData()} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => formatCurrency(value)} />
-                  <Bar dataKey="value" fill="#8884d8" />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: 12 }}
+                    interval={0}
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12 }}
+                    tickFormatter={(value) => {
+                      if (value >= 1000000) {
+                        return `${(value / 1000000).toFixed(1)}M`;
+                      } else if (value >= 1000) {
+                        return `${(value / 1000).toFixed(0)}K`;
+                      }
+                      return value;
+                    }}
+                  />
+                  <Tooltip 
+                    formatter={(value) => [formatCurrency(value), "Số tiền"]}
+                    labelStyle={{ color: "#374151" }}
+                    contentStyle={{
+                      backgroundColor: "#f9fafb",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px"
+                    }}
+                  />
+                  <Bar 
+                    dataKey="value" 
+                    fill="#3b82f6"
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>

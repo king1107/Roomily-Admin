@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import lockUser from '../../images/lock.png';
+import lockUser from '../../assets/images/lock.png';
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
@@ -12,6 +12,12 @@ const ManageUser = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [banReason, setBanReason] = useState("");
   const [banExpiresAt, setBanExpiresAt] = useState("");
+
+  // Thêm state cho tìm kiếm
+  const [searchUserId, setSearchUserId] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState(null);
 
   const pageSize = 10;
   const sortBy = "balance";
@@ -68,6 +74,56 @@ const ManageUser = () => {
     }
   };
 
+  // Tìm kiếm user theo userId
+  const handleSearchUser = async () => {
+    if (!searchUserId.trim()) {
+      setSearchError("Vui lòng nhập User ID để tìm kiếm");
+      return;
+    }
+
+    setIsSearching(true);
+    setSearchError(null);
+    setSearchResult(null);
+
+    try {
+      const response = await fetch(`https://api.roomily.tech/api/v1/users/${searchUserId.trim()}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("Không tìm thấy user với ID này");
+        }
+        throw new Error(`Lỗi: ${response.status}`);
+      }
+
+      const userData = await response.json();
+      // Fetch thêm thông tin isBanned cho user tìm được
+      const isBanned = await fetchIsBanned(userData.id);
+      setSearchResult({ ...userData, isBanned });
+    } catch (err) {
+      console.error("Lỗi khi tìm kiếm user:", err);
+      setSearchError(err.message);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchUserId("");
+    setSearchResult(null);
+    setSearchError(null);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchUser();
+    }
+  };
+
   useEffect(() => {
     fetchUsers(currentPage);
   }, [currentPage]);
@@ -119,6 +175,103 @@ const ManageUser = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen mx-4 rounded-lg mt-10">
       <h1 className="text-2xl font-bold mb-4">Quản lý người dùng</h1>
+
+      {/* Thanh tìm kiếm */}
+      <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Tìm kiếm theo User ID:
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={searchUserId}
+                onChange={(e) => setSearchUserId(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Nhập User ID để tìm kiếm..."
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                disabled={isSearching}
+              />
+              <button
+                onClick={handleSearchUser}
+                disabled={isSearching}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {isSearching ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Đang tìm...
+                  </>
+                ) : (
+                  "Tìm kiếm"
+                )}
+              </button>
+              {(searchUserId || searchResult) && (
+                <button
+                  onClick={handleClearSearch}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  Xóa
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Hiển thị lỗi tìm kiếm */}
+        {searchError && (
+          <div className="mt-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            {searchError}
+          </div>
+        )}
+
+        {/* Hiển thị kết quả tìm kiếm */}
+        {searchResult && (
+          <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-green-800 mb-3">Kết quả tìm kiếm:</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full table-auto border border-gray-300">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="px-4 py-2 border">ID</th>
+                    <th className="px-4 py-2 border">Tên đăng nhập</th>
+                    <th className="px-4 py-2 border">Email</th>
+                    <th className="px-4 py-2 border">Số dư</th>
+                    <th className="px-4 py-2 border">Xác minh</th>
+                    <th className="px-4 py-2 border">Trạng thái</th>
+                    <th className="px-4 py-2 border">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className={`text-center ${searchResult.isBanned ? "bg-red-100 text-red-700" : ""}`}>
+                    <td className="px-4 py-2 border">{searchResult.id}</td>
+                    <td className="px-4 py-2 border">{searchResult.username}</td>
+                    <td className="px-4 py-2 border">{searchResult.email}</td>
+                    <td className="px-4 py-2 border">{searchResult.balance}</td>
+                    <td className="px-4 py-2 border">
+                      {searchResult.isVerified ? "✔️" : "❌"}
+                    </td>
+                    <td className="px-4 py-2 border">
+                      {searchResult.isBanned ? "🚫" : "✅"}
+                    </td>
+                    <td className="px-4 py-2 border">
+                      <div className="flex justify-center">
+                        <img
+                          src={lockUser}
+                          alt="Khóa"
+                          className="w-5 h-5 cursor-pointer hover:opacity-80"
+                          onClick={() => handleLockClick(searchResult.id)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
 
       {error && <div className="text-red-500 mb-4">{error}</div>}
 

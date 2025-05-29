@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import unlockUser from "../../images/unlocked.png";
+import unlockUser from "../../assets/images/unlocked.png";
 
 const ManageReportedUser = () => {
   const [bannedUsers, setBannedUsers] = useState([]);

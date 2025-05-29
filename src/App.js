@@ -11,6 +11,7 @@ import ManageReportedUser from './components/PagesChild/ManageReportedUser';
 import NotFoundPage from './components/NotFoundPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ManageWithDraw from './components/PagesChild/ManageWithDraw';
+import UserVerification from './components/PagesChild/UserVerification';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/admin/manage-user" element={<ManageUser />} />
             <Route path="/admin/manage-reportedUser" element={<ManageReportedUser />} />
             <Route path="/admin/manage-withdraw" element={<ManageWithDraw />} />
+            <Route path="/admin/user-verification" element={<UserVerification />} />
           </Route>
         </Route>
         

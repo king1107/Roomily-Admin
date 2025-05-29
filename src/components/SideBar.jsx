@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
-import logo from "../images/logo.png";
-import dashboard from "../images/dashboard2.png";
-import house from "../images/house.png";
-import user from "../images/user1.png";
-import reportedUser from "../images/reported_users.png";
-import withdraw from "../images/cash_withdraw.png";
-import reportNoti from "../images/report_art.png"
+import logo from "../assets/images/logo.png";
+import dashboard from "../assets/images/dashboard2.png";
+import house from "../assets/images/house.png";
+import user from "../assets/images/user1.png";
+import reportedUser from "../assets/images/reported_users.png";
+import withdraw from "../assets/images/cash_withdraw.png";
+import reportNoti from "../assets/images/report_art.png"
+import verify from "../assets/images/verify_users.png"
 
 const Sidebar = () => {
   return (
@@ -57,6 +58,17 @@ const Sidebar = () => {
               <img src={user} alt="Người dùng" className="w-8 h-8 ml-2 object-cover z-10" />
               <li className="ml-2 z-10 text-black group-hover:text-black transition-colors duration-300">
                 Người dùng
+              </li>
+            </div>
+          </Link>
+          <Link to="/admin/user-verification">
+            <div className="relative flex items-center p-2 rounded-md overflow-hidden cursor-pointer group mb-5">
+              {/* Background Gradient Effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FBFBFB] to-[#99E5FF] w-0 group-hover:w-full transition-all duration-300 ease-in rounded-r-md"></div>
+              {/* Content */}
+              <img src={verify} alt="Xác minh người dùng" className="w-8 h-8 ml-2 object-cover z-10" />
+              <li className="ml-2 z-10 text-black group-hover:text-black transition-colors duration-300">
+                Xác minh người dùng
               </li>
             </div>
           </Link>

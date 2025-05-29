@@ -49,8 +49,7 @@ const Header = () => {
     }, [isDropdownOpen]); // Re-run effect when dropdown state changes
 
     return (
-        <div className="flex justify-between items-center p-4 bg-white shadow-md rounded-2xl mb-4">
-            <FiBell className="text-xl" />
+        <div className="flex justify-end items-center p-4 bg-white shadow-md rounded-2xl mb-4">
             <div className="flex justify-between items-center relative">
                 <span className="text-black">Welcome, Admin</span>
                 <div className="relative">

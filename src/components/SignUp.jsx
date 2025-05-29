@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import home1 from '../images/home1.png';
-import home2 from '../images/home2.png';
-import people1 from '../images/people1.png';
-import rectangle from '../images/Rectangle.png';
-import logo from '../images/logo.png'
+import home1 from '../assets/images/home1.png';
+import home2 from '../assets/images/home2.png';
+import people1 from '../assets/images/people1.png';
+import rectangle from '../assets/images/Rectangle.png';
+import logo from '../assets/images/logo.png'
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
